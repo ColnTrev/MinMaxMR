@@ -37,8 +37,10 @@ public class MinMaxSearch {
 
         FileInputFormat.setInputPaths(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
-
+        long startTime = System.currentTimeMillis();
         boolean status = job.waitForCompletion(true);
+        long endTime = System.currentTimeMillis();
+        System.out.println("Elapsed Time: " + (endTime - startTime));
         System.exit(status? 0 : 1);
     }
 }
