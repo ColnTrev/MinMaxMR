@@ -17,6 +17,8 @@ import java.io.IOException;
 public class MinMaxSearch {
     public static void main(String[] args) throws IOException, ClassNotFoundException, InterruptedException {
         Configuration conf = new Configuration();
+        conf.setInt("N", Integer.parseInt(args[2]));
+        conf.setInt("size", Integer.parseInt(args[3]));
         Job job = Job.getInstance(conf);
         job.setJobName("MinMaxSearch");
 
