@@ -1,3 +1,4 @@
+import org.apache.hadoop.io.DoubleWritable;
 import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Text;
@@ -12,25 +13,26 @@ import java.util.TreeMap;
 /**
  * Created by colntrev on 4/6/18.
  */
-public class MinMaxReducer extends Reducer<NullWritable, Text, IntWritable, Text> {
+public class MinMaxReducer extends Reducer<NullWritable, Text, DoubleWritable, Text> {
     private int N = 10;
-    private SortedMap<Integer, String> top = new TreeMap<>();
+    private SortedMap<Double, String> top = new TreeMap<>();
     @Override
     protected void reduce(NullWritable key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
            for(Text value : values){
                String valueString = value.toString().trim();
                String[] tokens = valueString.split(",");
-               String keyValue = tokens[0];
-               int frequency = Integer.parseInt(tokens[1]);
-               top.put(frequency, keyValue);
+               String keyValue = tokens[1];
+               double rast = Double.parseDouble(tokens[0]);
+               top.put(rast, keyValue);
+
                if(top.size() > N){
-                   top.remove(top.firstKey());
+                   top.remove(top.lastKey());
                }
            }
 
-           List<Integer> keys = new ArrayList<>(top.keySet());
+           List<Double> keys = new ArrayList<>(top.keySet());
            for(int i = keys.size()-1; i >= 0; i--){
-               context.write(new IntWritable(keys.get(i)), new Text(top.get(keys.get(i))));
+               context.write(new DoubleWritable(keys.get(i)), new Text(top.get(keys.get(i))));
            }
     }
 
